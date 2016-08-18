@@ -10,12 +10,15 @@ uint segment_tree::lpo2(uint n) {
 	--n;
 	for (int i = 1; i < 32; i *= 2)
 		n |= n >> i;
-	return ++n;
+	++n;
+	if (n == 0)
+		++n;
+	return n;
 }
 
 void segment_tree::_check_range(uint l, uint r) {
-	if (r > size)
-		throw std::out_of_range("r > size");
+	if (r > _size)
+		throw std::out_of_range("r > _size");
 	if (l >= r)
 		throw std::out_of_range("l >= r");
 }
@@ -40,28 +43,58 @@ void segment_tree::_sift_up(uint index) {
 	data[index].value = data[index * 2 + 1].get() + data[index * 2 + 2].get();
 }
 
-segment_tree::segment_tree() {
-	size = 0;
-	capacity = 0;
-	data = vector<node>();
+void segment_tree::_sift_all() {
+	for (int i = 0; i < _capacity - 1; ++i)
+		_sift_down(i);
+	for (int i = 0; i < _size; ++i) {
+		uint index = i + _capacity - 1;
+		if (data[index].filled)
+			data[index].value = data[index].inconsistency;
+		else
+			data[index].value += data[index].inconsistency;
+		data[index].filled = false;
+		data[index].inconsistency = 0;
+	}
+	for (int i = _capacity - 2; i >= 0; --i)
+		_sift_up(i);
 }
 
-segment_tree::segment_tree(vector<int>& input) : segment_tree() {
-	if (input.size()) {
-		size = input.size();
-		capacity = lpo2(size);
-		data = vector<node>(capacity * 2 - 1, node(0, 0, 0));
-		for (int i = 0; i < capacity; ++i) {
-			if (i < size)
-				data[i + capacity - 1] = node(input[i], i, i + 1);
-			else {
-				data[i + capacity - 1] = node(0, i, i + 1);
-			}
-		}
-		for (int i = capacity - 2; i >= 0; --i) {
-			data[i] = node(data[i * 2 + 1].value + data[i * 2 + 2].value, data[i * 2 + 1].left, data[i * 2 + 2].right);
+void segment_tree::_resize(uint new_cap) {
+	_sift_all();
+	uint old_size = _size;
+	vector<int> newdata(new_cap);
+	for (int i = 0; i < std::min(new_cap, (uint)_size); ++i)
+		newdata[i] = data[i + _capacity - 1].value;
+	*this = segment_tree(newdata);
+	_size = old_size;
+}
+
+
+segment_tree::segment_tree() : segment_tree(vector<int>()) {
+}
+
+segment_tree::segment_tree(vector<int>& input) {
+	_size = input.size();
+	_capacity = lpo2(_size);
+	data = vector<node>(_capacity * 2 - 1, node(0, 0, 0));
+	for (int i = 0; i < _capacity; ++i) {
+		if (i < _size)
+			data[i + _capacity - 1] = node(input[i], i, i + 1);
+		else {
+			data[i + _capacity - 1] = node(0, i, i + 1);
 		}
 	}
+	for (int i = _capacity - 2; i >= 0; --i) {
+		data[i] = node(data[i * 2 + 1].value + data[i * 2 + 2].value, data[i * 2 + 1].left, data[i * 2 + 2].right);
+	}
+}
+
+uint segment_tree::size() {
+	return _size;
+}
+
+bool segment_tree::empty() {
+	return _size == 0;
 }
 
 int segment_tree::_get(uint index, uint l, uint r) {
@@ -127,4 +160,20 @@ void segment_tree::set(uint l, uint r, int value) {
 
 void segment_tree::set(uint index, int value) {
 	set(index, index + 1, value);
+}
+
+void segment_tree::push_back(int elem) {
+	if (_size == _capacity)
+		_resize(_capacity * 2);
+	_size++;
+	set(_size - 1, elem);
+}
+
+void segment_tree::pop_back() {
+	if (_size == 0)
+		throw std::exception("empty container");
+	set(_size - 1, 0);
+	_size--;
+	if (_size * 4 + 1 < _capacity)
+		_resize(_capacity / 2);
 }
