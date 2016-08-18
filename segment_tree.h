@@ -19,8 +19,8 @@ private:
 	};
 
 	vector<node> data;
-	uint size;
-	uint capacity;
+	int _size;
+	int _capacity;
 
 	// least power of 2 greater or equal than n
 	uint lpo2(uint n);
@@ -34,13 +34,23 @@ private:
 	// accumulate answer from children
 	void _sift_up(uint index);
 
+	// get rid of all laziness
+	void _sift_all();
+
 	int _get(uint index, uint l, uint r);
 	void _add(uint index, uint l, uint r, int summand);
 	void _set(uint index, uint l, uint r, int value);
 
+	// change the capacity
+	void _resize(uint new_cap);
+
 public:
 	segment_tree();
 	segment_tree(vector<int>& input);
+
+	// elements count
+	uint size();
+	bool empty();
 
 	// get answer on segment
 	int get(uint l, uint r);
@@ -56,4 +66,8 @@ public:
 	void set(uint l, uint r, int value);
 	// set element to value
 	void set(uint index, int value);
+
+	// as in vector
+	void push_back(int elem);
+	void pop_back();
 };
