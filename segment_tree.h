@@ -7,6 +7,22 @@
 using std::vector;
 typedef unsigned int uint;
 
+/*
+	segment_tree<some_monoid<type>>
+   
+	Monoid - struct with zero, append and pow (look at monoid.h)
+
+	segment_tree methods:
+	size() - returns elements count, O(1)
+	empty() - is tree empty?, O(1)
+	get() - returns answer of append() on segment or just element, O(log)
+	set() - sets all elements on segment or just one element to some value, O(log)
+	add() - append value to all elements on segment, O(log)
+	push_back() - add element to end of tree, O(1) amortized
+	pop_back() - remove element from end of tree, O(1) amortized
+
+*/
+
 template<typename Monoid>
 class segment_tree {
 private:
