@@ -98,7 +98,7 @@ uint segment_tree<Monoid>::lpo2(uint n) {
 
 template<typename Monoid>
 void segment_tree<Monoid>::_check_range(uint l, uint r) {
-	if (r > _size)
+	if (r > (uint)_size)
 		throw std::out_of_range("r > _size");
 	if (l >= r)
 		throw std::out_of_range("l >= r");

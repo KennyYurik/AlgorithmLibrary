@@ -6,7 +6,7 @@ typedef unsigned int uint;
 template<typename T>
 struct monoid_add {
 	typedef T type;
-	static const T zero = T(0);
+	static const T zero;
 
 	static T append(const T& a, const T& b) {
 		return a + b;
@@ -18,12 +18,15 @@ struct monoid_add {
 };
 
 template<typename T>
+const T monoid_add<T>::zero = T(0);
+
+template<typename T>
 using monoid = monoid_add<T>;
 
 template<typename T>
 struct monoid_mul {
 	typedef T type;
-	static const T zero = T(1);
+	static const T zero;
 
 	static T append(const T& a, const T& b) {
 		return a * b;
@@ -41,6 +44,9 @@ struct monoid_mul {
 		return ans;
 	}
 };
+
+template<typename T>
+const T monoid_mul<T>::zero = T(1);
 
 template<typename T>
 struct monoid_min {
