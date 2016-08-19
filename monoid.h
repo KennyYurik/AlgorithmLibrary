@@ -1,6 +1,14 @@
-#pragma once
+/*
+	monoid :
+		type T - type
+		T zero - neutral element 
+		T append(T, T) - operation
+		T pow(T, n) - T append T append T .... n times
+*/
 
+#pragma once
 #include <limits>
+
 typedef unsigned int uint;
 
 template<typename T>
