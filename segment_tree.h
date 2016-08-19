@@ -6,12 +6,14 @@
 	segment_tree methods:
 		size() - returns elements count, O(1)
 		empty() - is tree empty?, O(1)
-		get() - returns answer of append() on segment or just element, O(log)
-		set() - sets all elements on segment or just one element to some value, O(log)
-		add() - append value to all elements on segment, O(log)
+		get() - returns answer of append() on segment or just element, O(log n)
+		set() - sets all elements on segment or just one element to some value, O(log n)
+		add() - append value to all elements on segment, O(log n)
 		push_back() - add element to end of tree, O(1) amortized
 		pop_back() - remove element from end of tree, O(1) amortized
 
+		constructor: 
+		segment_tree(vector<T>) - fill segment_tree with elements from vector, O(n)
 */
 
 #pragma once;
