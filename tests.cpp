@@ -14,7 +14,7 @@ double convert_duration(sclock::time_point start, sclock::time_point end) {
 
 void test_performance_segment_tree(std::ofstream& log, uint data_size, uint queries) {
 	typedef unsigned long long ull;
-	log << "--- segment tree correctness ---" << std::endl;
+	log << "--- segment tree performance ---" << std::endl;
 	log << "data size: " << data_size << std::endl;
 	log << "queries: " << queries << std::endl;
 	srand(clock());
