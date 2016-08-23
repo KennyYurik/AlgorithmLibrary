@@ -1,12 +1,9 @@
 --- segment tree correctness ---
-start size: 1000000
-queries: 100
+data size: 10000000
+queries: 1000000
+vector creation time: 180 ms
+tree creation time: 830 ms
+queries time: 2055 ms
 correctness: 100%
-get: 14
-set: 33
-add: 17
-push: 17
-pop: 19
-end size: 999998 999998
-16 24--- segment tree ---
+--- segment tree ---
 
