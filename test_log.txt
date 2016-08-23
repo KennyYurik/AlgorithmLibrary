@@ -1,9 +1,9 @@
---- segment tree correctness ---
+--- segment tree performance ---
 data size: 10000000
 queries: 1000000
-vector creation time: 180 ms
-tree creation time: 830 ms
-queries time: 2055 ms
+vector creation time: 192 ms
+tree creation time: 796 ms
+queries time: 2005 ms
 correctness: 100%
 --- segment tree ---
 
