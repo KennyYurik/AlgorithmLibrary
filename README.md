@@ -8,3 +8,7 @@ https://en.wikipedia.org/wiki/Monoid
 segment_tree.h - segment tree implementation 
 
 http://e-maxx.ru/algo/segment_tree
+
+mergesort.h
+
+inplace mergesort with O(1) extra space
