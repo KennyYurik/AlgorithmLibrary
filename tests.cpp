@@ -1,4 +1,5 @@
 #pragma comment(linker, "/STACK:25600000")
+
 #include "segment_tree.h"
 #include "mergesort.h"
 #include <chrono>
@@ -7,6 +8,8 @@
 #include <numeric>
 #include <fstream>
 #include <string>
+#include <iomanip>
+#include <vector>
 typedef std::chrono::steady_clock sclock;
 
 double convert_duration(sclock::time_point start, sclock::time_point end) {
@@ -52,25 +55,35 @@ void test_performance_segment_tree(std::ofstream& log, uint data_size, uint quer
 }
 
 
-bool test_msort(std::ofstream& log, int size) {
-	vector<int> v1(size);
-	vector<int> v2(size);
-	for (int i = 0; i < size; ++i) {
-		v1[i] = rand() % (size * 2);
-		v2[i] = v1[i];
-	}
-	sclock::time_point merge_start = sclock::now();
-	merge_sort(v1.begin(), v1.end());
-	sclock::time_point merge_end = sclock::now();
-	log << "mergesort " << convert_duration(merge_start, merge_end) << " ms" << std::endl;
-
-	sclock::time_point q_start = sclock::now();
-	std::sort(v2.begin(), v2.end());
-	sclock::time_point q_end = sclock::now();
-	log << "qsort " << convert_duration(q_start, q_end) << " ms" << std::endl;
-	for (int i = 0; i < size; ++i) {
-		if (v1[i] != v2[i])
-			return false;
+bool test_msort(std::ofstream& log, int start_size, int end_size) {
+	log << "N | merge_sort time | 10^6 * time / N log N | std::sort time | 10^6 * time / N log N" << std::endl;
+	for (int size = start_size; size <= end_size; size *= 1.1) {
+		log << std::setw(10) << size << " ";
+		vector<int> v1(size);
+		vector<int> v2(size);
+		for (int i = 0; i < size; ++i) {
+			v1[i] = rand() % (size * 2);
+			v2[i] = v1[i];
+		}
+		sclock::time_point merge_start = sclock::now();
+		merge_sort(v1.begin(), v1.end());
+		sclock::time_point merge_end = sclock::now();
+		double mduration = convert_duration(merge_start, merge_end);
+		log << std::setw(10) << mduration << "ms ";
+		log << std::setw(10) << mduration / size / log2(size) * 1000000 << " ";
+		sclock::time_point q_start = sclock::now();
+		std::sort(v2.begin(), v2.end());
+		sclock::time_point q_end = sclock::now();
+		double qduration = convert_duration(q_start, q_end);
+		log << std::setw(10) << qduration << "ms ";
+		log << std::setw(10) << qduration / size / log2(size) * 1000000 << " ";
+		for (int i = 0; i < size; ++i) {
+			if (v1[i] != v2[i]) {
+				log << "error";
+				return false;
+			}
+		}
+		log << std::endl;
 	}
 	return true;
 }
@@ -79,6 +92,6 @@ bool test_msort(std::ofstream& log, int size) {
 void main() {
 	std::ofstream llog("test_log.txt");
 	//test_performance_segment_tree(log, 10000000, 1000000);
-	if (!test_msort(llog, 10000000))
+	if (!test_msort(llog, 100000, 100000))
 		llog << "shit";
 }

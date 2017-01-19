@@ -1,6 +1,8 @@
 #pragma once
-#include <vector>
 #include <algorithm>
+using std::swap_ranges;
+using std::iter_swap;
+
 
 /*
 	selection sort
@@ -17,7 +19,7 @@ inline void slow_sort_blocks(Iter begin, Iter end, int bsize) {
 			if (*it2 < *min || *it2 == *min && *(it2 + (bsize - 1)) < *(min + (bsize - 1)))
 				min = it2;
 		}
-		std::swap_ranges(it, it + bsize, min);
+		swap_ranges(it, it + bsize, min);
 	}
 }
 
@@ -32,23 +34,23 @@ inline void slow_sort(Iter begin, Iter end) {
 */
 template<class Iter>
 inline void merge(Iter begin, Iter mid, Iter end, Iter buffer) {
-	auto buff_end = std::swap_ranges(begin, mid, buffer);
+	auto buff_end = swap_ranges(begin, mid, buffer);
 	auto begin1 = mid, end1 = end, begin2 = buffer, end2 = buff_end, out = begin;
 	while (true){
 		if (begin1 == end1) {
-			std::swap_ranges(begin2, end2, out);
+			swap_ranges(begin2, end2, out);
 			return;
 		}
 		if (begin2 == end2) {
-			std::swap_ranges(begin1, end1, out);
+			swap_ranges(begin1, end1, out);
 			return;
 		}
 		if (*begin2 < *begin1) {
-			std::iter_swap(out, begin2);
+			iter_swap(out, begin2);
 			++begin2;
 		}
 		else {
-			std::iter_swap(out, begin1);
+			iter_swap(out, begin1);
 			++begin1;
 		}
 		++out;
@@ -74,7 +76,7 @@ void merge_sort(Iter begin, Iter end) {
 	int bcount = length / bsize;
 	Iter cut_block = begin + ((mid - begin) / bsize) * bsize;
 	Iter buffer = begin + bsize * (bcount - 1);
-	std::swap_ranges(cut_block, cut_block + bsize, buffer);
+	swap_ranges(cut_block, cut_block + bsize, buffer);
 	bcount--;
 	
 	// bsize blocks, each is sorted + buffer, sizeof(buffer) >= bsize
